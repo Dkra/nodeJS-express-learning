@@ -20,7 +20,7 @@ exports.read = function(key) {
   })
 }
 
-exports.destory = function(key) {
+exports.destroy = function(key) {
   return new Promise((resolve, reject) => {
     if (notes[key]) {
       delete notes[key]
