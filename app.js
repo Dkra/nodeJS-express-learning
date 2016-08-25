@@ -25,7 +25,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/notes', notes)
-// app.use('/users', users);
+
+// Vendors
+app.use('/vendor/bootstrap', express.static(
+  path.join(__dirname, 'node_modules', 'bootstrap', 'dist')));
+app.use('/vendor/jquery', express.static(
+  path.join(__dirname, 'node_modules', 'jquery', 'dist')));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
