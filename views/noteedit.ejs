@@ -7,7 +7,7 @@
 <% include pageHeader %>
 <form method='POST' action='/notes/save'>
 <input type='hidden' name='docreate' value='<%=
-                  docreate ? "create" : "update"%>'>
+                  docreate ? true : false %>'>
 <p>Key:
 <% if (docreate) { %>
     <input type='text' name='notekey' value=''/>

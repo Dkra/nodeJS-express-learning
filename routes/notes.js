@@ -3,7 +3,10 @@
 var util = require('util');
 var express = require('express');
 var router = express.Router();
-var notes = require('../models/notes-memory');
+var path  = require('path');
+var notes = require(process.env.NOTES_MODEL
+                  ? path.join('..', process.env.NOTES_MODEL)
+                  : '../models/notes-memory');
 
 // Create
 router.get('/add', (req, res, next) => {
@@ -56,13 +59,17 @@ router.put('/update', (req, res, next) => {
 router.post('/save', (req, res, next) => {
   var p; // p will assign promise later on
 
-  if (req.body.docreate === true) {
+  console.log('reqbody', req.body);
+  if (req.body.docreate === 'true') {
     p = notes.create(req.body.notekey, req.body.title, req.body.body)
+    console.log('creating!!!!!!!!!!!!!!!');
   } else {
     p = notes.update(req.body.notekey, req.body.title, req.body.body)
+    console.log('updating!!!!!!!!!!!!!');
   }
-
   p.then(note => {
+    console.log('note', note);
+
     res.redirect('/')
   })
   .catch(err => {next(err)})
@@ -82,7 +89,6 @@ router.get('/destroy', (req, res, next) => {
 })
 
 router.post('/destroy/confirm', (req, res, next) => {
-  console.log('req', req);
   notes.destroy(req.body.notekey)
     .then(() => {
       res.redirect('/')
