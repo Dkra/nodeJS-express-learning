@@ -7,30 +7,26 @@ var notes = require(process.env.NOTES_MODEL
                   : '../models/notes-memory');
 
 router.get('/', function(req, res, next) {
-  notes.keylist()
+    notes.keylist()
     .then(keylist => {
-      const keyPromises = []
-      console.log('keylist', keylist);
-      for (let key of keylist) {
-        keyPromises.push(
-          notes.read(key)
-            .then(note => {
-              return {
-                key: note.key,
-                title: note.title,
-                body: note.body
-              }
-            })
-        );
-      }
-      console.log('keyPromises', keyPromises);
-      return Promise.all(keyPromises)
+        var keyPromises = keylist.map(key => {
+            return notes.read(key).then(note => {
+                return { key: note.key, title: note.title };
+            });
+        });
+        return Promise.all(keyPromises);
     })
     .then(notelist => {
-      console.log('notelist', notelist);
-      res.render('index', { title: 'Notes', notelist})
+        res.render('index', {
+            title: 'Notes',
+            notelist: notelist,
+            user: req.user ? req.user : undefined,
+            breadcrumbs: [
+                { href: '/', text: 'Home' }
+            ]
+        });
     })
-    .catch(err => next(err))
+    .catch(err => { error(err); next(err); });
 });
 
 module.exports = router;
