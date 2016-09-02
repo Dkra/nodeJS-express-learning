@@ -10,6 +10,17 @@
 <a class="btn btn-primary" href="/users/login">Log in</a>
 <% } %>
 <% if (typeof breadcrumbs !== 'undefined' && breadcrumbs) { %>
-..
+<ol class="breadcrumb">
+    <%
+    for (var crumb of breadcrumbs) {
+        if (crumb.active) {
+        %><li class="active"><%= crumb.text %></li><%
+        } else {
+        %><li><a href="<%= crumb.href %>">
+              <%= crumb.text %></a></li><%
+        }
+    }
+    %>
+</ol>
 <% } %>
 </header>

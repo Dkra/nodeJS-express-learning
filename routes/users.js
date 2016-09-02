@@ -25,6 +25,7 @@ exports.ensureAuthenticated = function(req, res, next) {
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
+    console.log('usersModel', usersModel)
     usersModel.userPasswordCheck(username, password)
     .then(check => {
       if (check.check) {
@@ -47,4 +48,29 @@ passport.deserializeUser(function(username, done) {
   usersModel.find(username)
   .then(user => done(null, user))
   .catch(err => done(err));
+});
+
+
+/*
+**  Login & Logout
+*/
+
+router.get('/login', function(req, res, next) {
+  // log(util.inspect(req));
+  res.render('login', {
+    title: "Login to Notes",
+    user: req.user,
+  });
+});
+
+router.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/',     // SUCCESS: Go to home page
+    failureRedirect: 'login', // FAIL: Go to /user/login
+  })
+);
+
+router.get('/logout', function(req, res, next) {
+  req.logout();
+  res.redirect('/');
 });

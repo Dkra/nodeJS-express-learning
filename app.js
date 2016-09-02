@@ -24,6 +24,12 @@ if (process.env.REQUEST_LOG_FILE) {
     });
 }
 var app = express();
+app.use(session({
+  store: new FileStore({ path: "sessions" }),
+  secret: 'keyboard mouse',resave: true,saveUninitialized: true
+}));
+users.initPassport(app);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/notes', notes)
+app.use('/users', users.router);
 
 // Vendors
 app.use('/vendor/bootstrap', express.static(
@@ -99,11 +106,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.use(session({
-  store: new FileStore({ path: "sessions" }),
-  secret: 'keyboard mouse',resave: true,saveUninitialized: true
-}));
-users.initPassport(app);
 
 
 module.exports = app;
