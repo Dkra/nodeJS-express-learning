@@ -44,7 +44,7 @@ passport.use(new LocalStrategy(
 passport.use(new TwitterStrategy({
     consumerKey: process.env.NoteAppKey,
     consumerSecret: process.env.NoteAppSecret,
-    callbackURL: "http://gtjiang.local:3000/users/auth/twitter/callback"
+    callbackURL: "http://localhost:3000/users/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
     usersModel.findOrCreate({
