@@ -8,6 +8,7 @@ const router   = express.Router();
 exports.router = router;
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
 const usersModel = require(process.env.USERS_MODEL
         ? path.join('..', process.env.USERS_MODEL)
         : '../models/users-rest');
@@ -36,6 +37,20 @@ passport.use(new LocalStrategy(
       }
       return check;
     })
+    .catch(err => done(err));
+  }
+));
+
+passport.use(new TwitterStrategy({
+    consumerKey: process.env.NoteAppKey,
+    consumerSecret: process.env.NoteAppSecret,
+    callbackURL: "http://gtjiang.local:3000/users/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, done) {
+    usersModel.findOrCreate({
+      id: profile.username, username: profile.username, password: "", provider: profile.provider, familyName: profile.displayName, givenName: "", middleName: "", photos: profile.photos, emails: profile.emails
+    })
+    .then(user => done(null, user))
     .catch(err => done(err));
   }
 ));
@@ -74,3 +89,12 @@ router.get('/logout', function(req, res, next) {
   req.logout();
   res.redirect('/');
 });
+
+// Twitter
+// Routing
+router.get('/auth/twitter', passport.authenticate('twitter'));
+
+// Authenticate
+router.get('/auth/twitter/callback',
+  passport.authenticate('twitter', { successRedirect: '/',
+                       failureRedirect: '/users/login' }));
