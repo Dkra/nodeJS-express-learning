@@ -17,6 +17,7 @@ exports.connectDB = function() {
     return new Promise((resolve, reject) => {
         fs.readFile(process.env.SEQUELIZE_CONNECT, 'utf8',
         (err, data) => {
+            log('process.env.SEQUELIZE_CONNECT', process.env.SEQUELIZE_CONNECT)
             if (err) reject(err);
             else resolve(data);
         });

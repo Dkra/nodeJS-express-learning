@@ -26,8 +26,8 @@ if (process.env.REQUEST_LOG_FILE) {
 var app = express();
 app.use(session({
   store: new FileStore({ path: "sessions" }),
-  secret: 'keyboard mouse',resave: true,saveUninitialized: true
-}));
+  secret: 'keyboard mouse',resave: true,saveUninitialized: true}));
+  
 users.initPassport(app);
 
 
